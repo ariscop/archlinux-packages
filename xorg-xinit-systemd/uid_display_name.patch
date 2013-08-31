@@ -1,0 +1,65 @@
+diff --git a/startx.cpp b/startx.cpp
+index 536eb7f..c140883 100644
+--- a/startx.cpp
++++ b/startx.cpp
+@@ -11,7 +11,6 @@ XCOMM
+ XCOMM Site administrators are STRONGLY urged to write nicer versions.
+ XCOMM
+ 
+-unset DBUS_SESSION_BUS_ADDRESS
+ unset SESSION_MANAGER
+ 
+ #if defined(__SCO__) || defined(__UNIXWARE__) || defined(__APPLE__)
+@@ -76,7 +75,7 @@ defaultclient=XTERM
+ defaultserver=XSERVER
+ defaultclientargs=""
+ defaultserverargs=""
+-defaultdisplay=":0"
++defaultdisplay=":$UID"
+ clientargs=""
+ serverargs=""
+ 
+@@ -134,14 +133,6 @@ fi
+ enable_xauth=1
+ #endif
+ 
+-XCOMM Automatically determine an unused $DISPLAY
+-d=0
+-while true ; do
+-    [ -e /tmp/.X$d-lock ] || break
+-    d=$(($d + 1))
+-done
+-defaultdisplay=":$d"
+-unset d
+ 
+ #if defined(__SCO__) || defined(__UNIXWARE__)
+ 
+diff --git a/xinit.c b/xinit.c
+index 2ab817f..4b53465 100644
+--- a/xinit.c
++++ b/xinit.c
+@@ -91,7 +91,6 @@ char xserverrcbuf[256];
+ #define FALSE 0
+ 
+ static char *default_server = "X";
+-static char *default_display = ":0";        /* choose most efficient */
+ static char *default_client[] = {"xterm", "-geometry", "+1+1", "-n", "login", NULL};
+ static char *serverargv[100];
+ static char *clientargv[100];
+@@ -195,10 +194,13 @@ main(int argc, char *argv[])
+         *sptr++ = *argv++;
+         argc--;
+     }
+-    if (argc > 0 && (argv[0][0] == ':' && isdigit(argv[0][1])))
++    if (argc > 0 && (argv[0][0] == ':' && isdigit(argv[0][1]))) {
+         displayNum = *argv;
+-    else
+-        displayNum = *sptr++ = default_display;
++    } else {
++        displayNum = malloc(16);
++        snprintf(displayNum, 16, ":%d", (int)getuid());
++        *sptr++ = displayNum;
++    }
+ 
+     start_of_server_args = (sptr - server);
+     while (--argc >= 0) {
