@@ -1,0 +1,21 @@
+# Maintainer: Andrew Cook <ariscop@gmail.com>
+
+pkgname=dbus-user-units
+pkgver=1
+pkgrel=1
+pkgdesc="systemd units for dbus session bus"
+arch=('any')
+depends=('systemd' 'dbus')
+license=('custom')
+source=('dbus.socket' 'dbus.service')
+md5sums=('1616e4ef4e4baa21ef3d86cc0f921906'
+         '412a7c1dd6d8d109df14cdbbb8e2ba29')
+
+package() {
+    install -m755 -d "${pkgdir}"/usr/lib/systemd/user/
+    install -m755 -d "${pkgdir}"/usr/lib/systemd/user/default.target.wants/
+    install -m644 "${srcdir}"/dbus.service "${pkgdir}"/usr/lib/systemd/user/
+    install -m644 "${srcdir}"/dbus.socket  "${pkgdir}"/usr/lib/systemd/user/
+    ln -s /usr/lib/systemd/user/dbus.socket "${pkgdir}"/usr/lib/systemd/user/default.target.wants/
+}
+
