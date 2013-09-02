@@ -1,0 +1,50 @@
+# Maintainer: Yukicanis <yukicanis@gmail.com>
+# Contributor: Michael Eckert <michael.eckert@linuxmail.org>
+# Edited by: Zachary Lund <admin@computerquip.com>
+# Edited by: Andrew Cook <ariscop@gmail.com>
+
+pkgname='xwayland-git'
+pkgver=1.12.2.116.g057bf63
+pkgrel=1
+description=('Xorg Server with Wayland Support')
+arch=('i686' 'x86_64')
+license=('custom')
+url="http://xorg.freedesktop.org"
+makedepends=('pixman' 'libx11' 'mesa' 'xf86driproto' 'xcmiscproto' 'xtrans' 'bigreqsproto' 'randrproto' 'inputproto' 'fontsproto' 'videoproto'
+             'compositeproto' 'recordproto' 'scrnsaverproto' 'resourceproto' 'xineramaproto' 'libxkbfile' 'libxfont' 'renderproto' 'libpciaccess'
+             'libxv' 'xf86dgaproto' 'libxmu' 'libxrender' 'libxi' 'dmxproto' 'libxaw' 'libdmx' 'libxtst' 'libxres' 'xorg-xkbcomp' 'xorg-util-macros'
+             'xorg-font-util' 'glproto' 'dri2proto' 'libgcrypt') 
+depends=('libxdmcp' 'libxfont' 'libpciaccess' 'libdrm' 'pixman>=0.28.0'
+           'libgcrypt' 'libxau' 'xf86-input-evdev' 'xkeyboard-config'
+           'xorg-xkbcomp' 'xorg-setxkbmap' 'xorg-fonts-misc')
+provides=('xwayland')
+conflicts=('xwayland')
+source=('git+git://anongit.freedesktop.org/xorg/xserver#branch=xwayland-1.12' 'X')
+md5sums=('SKIP' '29ee65fa4fb43881922b920b0a2b3bf5')
+
+pkgver() {
+  cd $srcdir/xserver
+  git describe --always | sed 's|xorg-server-||g' | sed 's|-|.|g'
+}
+
+build() {
+  cd $srcdir/xserver
+  ./autogen.sh --prefix=/opt/xwayland/ \
+               --disable-xvfb \
+               --disable-xnest \
+               --localstatedir=/usr/var \
+               --with-xkb-path=/usr/share/X11/xkb \
+               --with-xkb-output=/var/lib/xkb \
+               --with-xkb-bin-directory=/usr/bin \
+               --with-fontrootdir=/usr/share/fonts
+  make
+}
+
+package() {
+  cd $srcdir/xserver
+  make DESTDIR="${pkgdir}" install
+  rm -r "${pkgdir}"/var/lib
+  rmdir "${pkgdir}"/usr/var/log
+  rm "${pkgdir}"/opt/xwayland/bin/X
+  install -m 755 "${srcdir}"/X "${pkgdir}"/opt/xwayland/bin/X
+}
