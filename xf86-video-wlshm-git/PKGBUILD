@@ -23,6 +23,7 @@ pkgver() {
 build() {
   cd xf86-video-wlshm
   patch -p1 < "${srcdir}"/include_fix.patch
+  export ACLOCAL_PATH=/opt/xwayland/share/aclocal/
   ./autogen.sh --prefix=/opt/xwayland/ \
         PKG_CONFIG_PATH=/opt/xwayland/lib/pkgconfig/
   make
