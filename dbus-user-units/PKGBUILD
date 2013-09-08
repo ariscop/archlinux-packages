@@ -2,7 +2,7 @@
 
 pkgname=dbus-user-units
 pkgver=1
-pkgrel=1
+pkgrel=2
 pkgdesc="systemd units for dbus session bus"
 arch=('any')
 depends=('systemd' 'dbus')
@@ -13,9 +13,9 @@ md5sums=('1616e4ef4e4baa21ef3d86cc0f921906'
 
 package() {
     install -m755 -d "${pkgdir}"/usr/lib/systemd/user/
-    install -m755 -d "${pkgdir}"/usr/lib/systemd/user/default.target.wants/
+    install -m755 -d "${pkgdir}"/usr/lib/systemd/user/default.target.requires/
     install -m644 "${srcdir}"/dbus.service "${pkgdir}"/usr/lib/systemd/user/
     install -m644 "${srcdir}"/dbus.socket  "${pkgdir}"/usr/lib/systemd/user/
-    ln -s /usr/lib/systemd/user/dbus.socket "${pkgdir}"/usr/lib/systemd/user/default.target.wants/
+    ln -s /usr/lib/systemd/user/dbus.socket "${pkgdir}"/usr/lib/systemd/user/default.target.requires/
 }
 
