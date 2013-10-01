@@ -4,7 +4,7 @@
 # Edited by: Andrew Cook <ariscop@gmail.com>
 
 pkgname='xwayland-git'
-pkgver=1.12.2.116.g057bf63
+pkgver=1.14.99.1.226.g7525799
 pkgrel=1
 description=('Xorg Server with Wayland Support')
 arch=('i686' 'x86_64')
@@ -19,7 +19,7 @@ depends=('libxdmcp' 'libxfont' 'libpciaccess' 'libdrm' 'pixman>=0.28.0'
            'xorg-xkbcomp' 'xorg-setxkbmap' 'xorg-fonts-misc')
 provides=('xwayland')
 conflicts=('xwayland')
-source=('git+git://anongit.freedesktop.org/xorg/xserver#branch=xwayland-1.12' 'X')
+source=('git+git://anongit.freedesktop.org/xorg/xserver#branch=xwayland' 'X')
 md5sums=('SKIP' '29ee65fa4fb43881922b920b0a2b3bf5')
 
 pkgver() {

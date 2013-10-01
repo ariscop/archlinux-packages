@@ -1,8 +1,8 @@
 # Maintainer: Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 # Maintainer: Andrew Cook <ariscop@gmail.com>
 
-pkgname=xf86-video-wlshm-xwayland-git
-pkgver=7f7ba1b
+pkgname=xf86-video-wayland-git
+pkgver=8c70ac6
 pkgrel=1
 pkgdesc="X.org generic driver for XWayland"
 arch=('i686' 'x86_64')
@@ -10,19 +10,17 @@ url="http://wayland.freedesktop.org/"
 license=('MIT')
 depends=('weston' 'wayland' 'xwayland-git')
 makedepends=('randrproto' 'inputproto' 'dri2proto' 'xf86dgaproto' 'libxxf86dga')
-source=(git://people.freedesktop.org/~iksaif/xf86-video-wlshm include_fix.patch xorg.conf)
-md5sums=('SKIP'
-         '1837a04323ce9f716fe0dd26c194ab05'
-         'd2af76eebf9ea2ef7c5e2a8feb87fa22')
+replaces=(xf86-video-wlshm)
+source=(git://anongit.freedesktop.org/xorg/driver/xf86-video-wayland xorg.conf)
+md5sums=('SKIP' 'c7e427fb07781045af81349372f332ab')
 
 pkgver() {
-  cd xf86-video-wlshm
+  cd xf86-video-wayland
   git describe --always | sed 's|-|.|g' 
 }
 
 build() {
-  cd xf86-video-wlshm
-  patch -p1 < "${srcdir}"/include_fix.patch
+  cd xf86-video-wayland
   export ACLOCAL_PATH=/opt/xwayland/share/aclocal/
   ./autogen.sh --prefix=/opt/xwayland/ \
         PKG_CONFIG_PATH=/opt/xwayland/lib/pkgconfig/
@@ -30,7 +28,7 @@ build() {
 }
 
 package() {
-  cd xf86-video-wlshm
+  cd xf86-video-wayland
   make DESTDIR="${pkgdir}" install
   install -d 755 "${pkgdir}"/opt/xwayland/etc/X11/
   install -m 644 "${srcdir}"/xorg.conf "${pkgdir}"/opt/xwayland/etc/X11/xorg.conf
