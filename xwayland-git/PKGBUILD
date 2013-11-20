@@ -4,7 +4,7 @@
 # Edited by: Andrew Cook <ariscop@gmail.com>
 
 pkgname='xwayland-git'
-pkgver=1.14.99.1.226.g7525799
+pkgver=1.14.99.1.235.ga258085
 pkgrel=1
 description=('Xorg Server with Wayland Support')
 arch=('i686' 'x86_64')
